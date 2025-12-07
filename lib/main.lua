@@ -4454,7 +4454,7 @@ do
                 Font = Library.Theme.Font,
                 Size = Library.Theme.TextSize,
                 Color = Library.Theme.Text,
-                Text = "poems | " .. ("%s, %s, %s"):format(os.date("%B"), os.date("%d"), os.date("%Y")),
+                Text = "poems",
                 Position = Vector2.new(WindowFrame.Position.X + (WindowFrame.Size.X / 2), WindowOutlineBorder.Position.Y + 4),
                 Visible = true,
                 Center = false,
