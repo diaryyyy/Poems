@@ -248,47 +248,6 @@ do
 	    return R, G, B
     end
     --
-    Utility.AddCursor = function(Instance)
-        local CursorOutline = Utility.AddDrawing("Triangle", {
-            Color = Library.Theme.Accent[1],
-            Filled = false,
-            ZIndex = 5
-        }, Library.Ignores)
-        --
-        local Cursor = Utility.AddDrawing("Triangle", {
-            Color = Library.Theme.Accent[1],
-            Filled = true,
-            Transparency = 1,
-            ZIndex = 5
-        }, Library.Ignores)
-        --
-        Utility.AddConnection(Library.Communication.Event, function(Type, Color)
-            if Type == "Accent" then
-                Cursor.Color = Color
-                CursorOutline.Color = Color
-            end
-        end)
-        --
-        Utility.AddConnection(RunService.RenderStepped, function()
-            local Mouse = UserInput:GetMouseLocation()
-            --
-            if Library.WindowVisible then
-                CursorOutline.Visible = true
-                CursorOutline.PointA = Vector2.new(Mouse.X, Mouse.Y)
-                CursorOutline.PointB = Vector2.new(Mouse.X + 15, Mouse.Y + 5)
-                CursorOutline.PointC = Vector2.new(Mouse.X + 5, Mouse.Y + 15)
-
-                Cursor.Visible = true
-                Cursor.PointA = Vector2.new(Mouse.X, Mouse.Y)
-                Cursor.PointB = Vector2.new(Mouse.X + 15, Mouse.Y + 5)
-                Cursor.PointC = Vector2.new(Mouse.X + 5, Mouse.Y + 15)
-            else
-                CursorOutline.Visible = false
-                Cursor.Visible = false
-            end
-        end)
-    end
-    --
     Utility.MiddlePos = function(Instance)
         return Vector2.new(
             (Camera.ViewportSize.X / 2) - (Instance.Size.X / 2), 
@@ -483,28 +442,22 @@ do
         --
         Window.SetText(0, "UI Initialization [ Downloading ]")
         --
-        Utility.AddFolder("akiri")
-        Utility.AddFolder("akiri/Caches")
-        Utility.AddFolder("akiri/Assets")
-        Utility.AddFolder("akiri/Assets/UI")
-        Utility.AddFolder("akiri/Configs")
-        Utility.AddFolder("akiri/Scripts")
+        Utility.AddFolder("poems")
+        Utility.AddFolder("poems/Caches")
+        Utility.AddFolder("poems/Assets")
+        Utility.AddFolder("poems/Assets/UI")
+        Utility.AddFolder("poems/Configs")
+        Utility.AddFolder("poems/Scripts")
         --
-        Library.Theme.Gradient = Utility.AddImage("akiri/Assets/UI/Gradient.png", "https://raw.githubusercontent.com/mvonwalk/Exterium/main/Gradient.png")
-        -- Library.Theme.SecondIcon = Utility.AddImage("akiri/Assets/UI/Gradient.png", "https://raw.githubusercontent.com/mvonwalk/Exterium/main/Gradient.png")
-        Library.Theme.Hue = Utility.AddImage("akiri/Assets/UI/Hue.png", "https://raw.githubusercontent.com/mvonwalk/Exterium/main/HuePicker.png")
-        Library.Theme.Saturation = Utility.AddImage("akiri/Assets/UI/Saturation.png", "https://raw.githubusercontent.com/mvonwalk/Exterium/main/SaturationPicker.png")
-        Library.Theme.SaturationCursor = Utility.AddImage("akiri/Assets/UI/HueCursor.png", "https://raw.githubusercontent.com/mvonwalk/splix-assets/main/Images-cursor.png")
+        Library.Theme.Dummy = Utility.AddImage("poems/Assets/UI/Dummy.png", "https://i.imgur.com/6M6buVv.png")
+        Library.Theme.Astolfo = Utility.AddImage("poems/Assets/UI/Astolfo.png", "https://i.imgur.com/T20cWY9.png")
+        Library.Theme.Aiko = Utility.AddImage("poems/Assets/UI/Aiko.png", "https://i.imgur.com/1gRIdko.png")
+        Library.Theme.Rem = Utility.AddImage("poems/Assets/UI/Rem.png", "https://i.imgur.com/ykbRkhJ.png")
+        Library.Theme.Violet = Utility.AddImage("poems/Assets/UI/Violet.png", "https://i.imgur.com/7B56w4a.png")
+        Library.Theme.Asuka = Utility.AddImage("poems/Assets/UI/Asuka.png", "https://i.imgur.com/3hwztNM.png")
         --
-        Library.Theme.Dummy = Utility.AddImage("akiri/Assets/UI/Dummy.png", "https://i.imgur.com/6M6buVv.png")
-        Library.Theme.Astolfo = Utility.AddImage("akiri/Assets/UI/Astolfo.png", "https://i.imgur.com/T20cWY9.png")
-        Library.Theme.Aiko = Utility.AddImage("akiri/Assets/UI/Aiko.png", "https://i.imgur.com/1gRIdko.png")
-        Library.Theme.Rem = Utility.AddImage("akiri/Assets/UI/Rem.png", "https://i.imgur.com/ykbRkhJ.png")
-        Library.Theme.Violet = Utility.AddImage("akiri/Assets/UI/Violet.png", "https://i.imgur.com/7B56w4a.png")
-        Library.Theme.Asuka = Utility.AddImage("akiri/Assets/UI/Asuka.png", "https://i.imgur.com/3hwztNM.png")
-        --
-        if not isfolder("akiri/Configs/" .. game.PlaceId) then
-            makefolder("akiri/Configs/" .. game.PlaceId)
+        if not isfolder("poems/Configs/" .. game.PlaceId) then
+            makefolder("poems/Configs/" .. game.PlaceId)
         end
         --
         Window.SetText(1, "Checking Assets")
@@ -765,8 +718,6 @@ do
             Visible = true,
             Data = Library.Theme.Logo
         })
-        --
-        Utility.AddCursor(WindowFrame)
         --
         local WindowHeader = Utility.AddDrawing("Square", {
             Size = Vector2.new(WindowOutlineBorder.Size.X - 2, 70),
@@ -1495,14 +1446,6 @@ do
                             ZIndex = 3
                         })
                         --
-                        local Cursor = Utility.AddDrawing("Image", {
-                            Size = Vector2.new(6, 6),
-                            Data = Library.Theme.SaturationCursor,
-                            Transparency = 1,
-                            Visible = true,
-                            ZIndex = 6
-                        })
-                        --
                         local InternalInlineHex = Utility.AddDrawing("Square", {
                             Size = Vector2.new(80 - 2, 18 - 2),
                             Position = Vector2.new(InternalOutline.Position.X + 8 + 1, InternalOutline.Position.Y + InternalSaturation.Size.Y + 30 + 1),
@@ -1612,7 +1555,6 @@ do
                             InternalOutlineRainbow.Visible = State
                             InternalRainbow.Visible = State
                             InternalTopline.Visible = State
-                            Cursor.Visible = State
                             InternalOutlineHuePicker.Visible = State
                             InternalHuePicker.Visible = State
                             Tab.Dropdowns[Side][ToggleTitle.Text] = State
@@ -2879,16 +2821,6 @@ do
                         ZIndex = 3
                     })
                     --
-                    
-                    --
-                    local Cursor = Utility.AddDrawing("Image", {
-                        Size = Vector2.new(6, 6),
-                        Data = Library.Theme.SaturationCursor,
-                        Transparency = 1,
-                        Visible = true,
-                        ZIndex = 6
-                    })
-                    --
                     local InternalInlineHex = Utility.AddDrawing("Square", {
                         Size = Vector2.new(80 - 2, 18 - 2),
                         Position = Vector2.new(InternalOutline.Position.X + 8 + 1, InternalOutline.Position.Y + InternalSaturation.Size.Y + 30 + 1),
@@ -3006,7 +2938,6 @@ do
                         InternalOutlineRainbow.Visible = State
                         InternalRainbow.Visible = State
                         InternalTopline.Visible = State
-                        Cursor.Visible = State
                         InternalOutlineHuePicker.Visible = State
                         InternalHuePicker.Visible = State
                         Tab.Dropdowns[Side][ColorpickerTitle.Text] = State
