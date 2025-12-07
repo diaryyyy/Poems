@@ -1,8 +1,3 @@
--- // Lib \\ --
---[[
-    local UI = loadstring(game:HttpGet("https://akiri.best/assets/files/gayasf.ui2?key=5y1lxXSfWKhlQkSqhUuFyB8kPp8hsCau"))()
-]]
--- // Library Init \\ --
 local Start = tick()
 local LoadTime = tick()
 local Secure = setmetatable({}, {
@@ -248,6 +243,49 @@ do
 	    return R, G, B
     end
     --
+    Utility.AddCursor = function(Instance)
+        local CursorOutline = Utility.AddDrawing("Triangle", {
+            Color = Library.Theme.Accent[1],
+            Thickness = 1,
+            Filled = false,
+            ZIndex = 5
+        }, Library.Ignores)
+        --
+        local Cursor = Utility.AddDrawing("Triangle", {
+            Color = Library.Theme.Accent[1],
+            Thickness = 3,
+            Filled = true,
+            Transparency = 1,
+            ZIndex = 5
+        }, Library.Ignores)
+        --
+        Utility.AddConnection(Library.Communication.Event, function(Type, Color)
+            if Type == "Accent" then
+                Cursor.Color = Color
+                CursorOutline.Color = Color
+            end
+        end)
+        --
+        Utility.AddConnection(RunService.RenderStepped, function()
+            local Mouse = UserInput:GetMouseLocation()
+            --
+            if Library.WindowVisible then
+                CursorOutline.Visible = true
+                CursorOutline.PointA = Vector2.new(Mouse.X, Mouse.Y)
+                CursorOutline.PointB = Vector2.new(Mouse.X + 15, Mouse.Y + 5)
+                CursorOutline.PointC = Vector2.new(Mouse.X + 5, Mouse.Y + 15)
+
+                Cursor.Visible = true
+                Cursor.PointA = Vector2.new(Mouse.X, Mouse.Y)
+                Cursor.PointB = Vector2.new(Mouse.X + 15, Mouse.Y + 5)
+                Cursor.PointC = Vector2.new(Mouse.X + 5, Mouse.Y + 15)
+            else
+                CursorOutline.Visible = false
+                Cursor.Visible = false
+            end
+        end)
+    end
+    --
     Utility.MiddlePos = function(Instance)
         return Vector2.new(
             (Camera.ViewportSize.X / 2) - (Instance.Size.X / 2), 
@@ -265,19 +303,19 @@ do
             end
         end
         writefile(
-            "akiri/Configs/" .. tostring(game.PlaceId) .. "/" .. Config .. ".json", 
+            "poems/Configs/" .. tostring(game.PlaceId) .. "/" .. Config .. ".json", 
             HttpService:JSONEncode(CFG)
         )
     end
     --
     Utility.DeleteConfig = function(Config)
         delfile(
-            "akiri/Configs/" .. tostring(game.PlaceId) .. "/" .. Config .. ".json"
+            "poems/Configs/" .. tostring(game.PlaceId) .. "/" .. Config .. ".json"
         )
     end
     --
     Utility.LoadConfig = function(Config)
-        local CFG = HttpService:JSONDecode(readfile("akiri/Configs/" .. tostring(game.PlaceId) .. "/" .. Config .. ".json"))
+        local CFG = HttpService:JSONDecode(readfile("poems/Configs/" .. tostring(game.PlaceId) .. "/" .. Config .. ".json"))
         --
         for Index, Val in pairs(CFG) do
             if Library.Items[Index].TypeOf == "Keybind" then
@@ -323,10 +361,11 @@ do
             Max = 2, Current = 0
         }
         --
-        Library.Theme.Logo = Utility.AddImage("akiri/Assets/UI/Logo2.png", "https://i.imgur.com/LbR3IoH.png")
+        Library.Theme.Logo = Utility.AddImage("poems/Assets/UI/Logo2.png", "https://i.imgur.com/LbR3IoH.png")
         --
         local WindowOutline = Utility.AddDrawing("Square", {
             Size = WindowSize,
+            Thickness = 0,
             Color = Library.Theme.Outline,
             Visible = true,
             Filled = true
@@ -337,6 +376,7 @@ do
         local WindowOutlineBorder = Utility.AddDrawing("Square", {
             Size = Vector2.new(WindowOutline.Size.X - 2, WindowOutline.Size.Y - 2),
             Position = Vector2.new(WindowOutline.Position.X + 1, WindowOutline.Position.Y + 1),
+            Thickness = 0,
             Color = Library.Theme.Accent[1],
             Visible = true,
             Filled = true
@@ -345,6 +385,7 @@ do
         local WindowFrame = Utility.AddDrawing("Square", {
             Size = Vector2.new(WindowOutlineBorder.Size.X - 2, WindowOutlineBorder.Size.Y - 2),
             Position = Vector2.new(WindowOutlineBorder.Position.X + 1, WindowOutlineBorder.Position.Y + 1),
+            Thickness = 0,
             Transparency = 1,
             Color = Library.Theme.DarkContrast,
             Visible = true,
@@ -354,6 +395,7 @@ do
         local WindowTopline = Utility.AddDrawing("Square", {
             Size = Vector2.new(WindowOutline.Size.X - 2, 2),
             Position = Vector2.new(WindowOutlineBorder.Position.X, WindowOutlineBorder.Position.Y),
+            Thickness = 0,
             Color = Library.Theme.Accent[1],
             Visible = false,
             Filled = true
@@ -392,6 +434,7 @@ do
             Color = Library.Theme.Inline,
             Position = Vector2.new(WindowFrame.Position.X + (WindowFrame.Size.X / 2), WindowOutlineBorder.Position.Y + 8),
             Transparency = 0.75,
+            Thickness = 0,
             Visible = true,
             Filled = true
         })
@@ -400,6 +443,7 @@ do
             Size = Vector2.new(SliderInline.Size.X - 2, SliderInline.Size.Y - 2),
             Color = Library.Theme.Outline,
             Transparency = 0.5,
+            Thickness = 0,
             Visible = true,
             Filled = true
         })
@@ -408,6 +452,7 @@ do
             Size = Vector2.new(((SliderInline.Size.X - 2) / (Window.Max / math.clamp(Window.Current, 0, Window.Max))), SliderInline.Size.Y - 2),
             Color = Library.Theme.Accent[1],
             Transparency = 0.75,
+            Thickness = 0,
             Visible = true,
             Filled = true
         })
@@ -583,6 +628,7 @@ do
         do
             local WindowOutline = Utility.AddDrawing("Square", {
                 Size = Vector2.new(120, 20),
+                Thickness = 0,  
                 Color = Library.Theme.Outline,
                 Visible = true,
                 Filled = true
@@ -593,6 +639,7 @@ do
             local WindowOutlineBorder = Utility.AddDrawing("Square", {
                 Size = Vector2.new(WindowOutline.Size.X - 2, WindowOutline.Size.Y - 2),
                 Position = Vector2.new(WindowOutline.Position.X + 1, WindowOutline.Position.Y + 1),
+                Thickness = 0,
                 Color = Library.Theme.Accent[1],
                 Visible = false,
                 Filled = true
@@ -601,6 +648,7 @@ do
             local WindowFrame = Utility.AddDrawing("Square", {
                 Size = Vector2.new(WindowOutlineBorder.Size.X - 2, WindowOutlineBorder.Size.Y - 2),
                 Position = Vector2.new(WindowOutlineBorder.Position.X + 1, WindowOutlineBorder.Position.Y + 1),
+                Thickness = 0,
                 Transparency = 1,
                 Color = Library.Theme.DarkContrast,
                 Visible = true,
@@ -610,6 +658,7 @@ do
             local WindowTopline = Utility.AddDrawing("Square", {
                 Size = Vector2.new(WindowOutlineBorder.Size.X, 1),
                 Position = Vector2.new(WindowOutlineBorder.Position.X, WindowOutlineBorder.Position.Y),
+                Thickness = 0,
                 Color = Library.Theme.Accent[1],
                 Visible = true,
                 Filled = true
@@ -686,6 +735,7 @@ do
         --
         local WindowOutline = Utility.AddDrawing("Square", {
             Size = Size,
+            Thickness = 0,
             Color = Library.Theme.Outline,
             Visible = true,
             Filled = true
@@ -696,6 +746,7 @@ do
         local WindowOutlineBorder = Utility.AddDrawing("Square", {
             Size = Vector2.new(WindowOutline.Size.X - 2, WindowOutline.Size.Y - 2),
             Position = Vector2.new(WindowOutline.Position.X + 1, WindowOutline.Position.Y + 1),
+            Thickness = 0,
             Color = Library.Theme.Accent[1],
             Visible = true,
             Filled = true
@@ -704,6 +755,7 @@ do
         local WindowFrame = Utility.AddDrawing("Square", {
             Size = Vector2.new(WindowOutlineBorder.Size.X - 2, WindowOutlineBorder.Size.Y - 2),
             Position = Vector2.new(WindowOutlineBorder.Position.X + 1, WindowOutlineBorder.Position.Y + 1),
+            Thickness = 0,
             Transparency = 1,
             Color = Library.Theme.DarkContrast,
             Visible = true,
@@ -719,9 +771,12 @@ do
             Data = Library.Theme.Logo
         })
         --
+        Utility.AddCursor(WindowFrame)
+        --
         local WindowHeader = Utility.AddDrawing("Square", {
             Size = Vector2.new(WindowOutlineBorder.Size.X - 2, 70),
             Position = Vector2.new(WindowOutlineBorder.Position.X + 1, WindowOutlineBorder.Position.Y + 1),
+            Thickness = 0,
             Transparency = 0,
             Color = Library.Theme.Hitbox,
             Visible = true,
@@ -733,6 +788,7 @@ do
         local WindowTopline = Utility.AddDrawing("Square", {
             Size = Vector2.new(WindowOutlineBorder.Size.X, 1),
             Position = Vector2.new(WindowOutlineBorder.Position.X, WindowOutlineBorder.Position.Y),
+            Thickness = 0,
             Color = Library.Theme.Accent[1],
             Visible = false,
             Filled = true
@@ -760,6 +816,7 @@ do
         local SecondBorderInline = Utility.AddDrawing("Square", {
             Size = Vector2.new(Size.X - 17, Size.Y - 90),
             Position = Vector2.new(WindowOutlineBorder.Position.X + 8, WindowOutlineBorder.Position.Y + 82),
+            Thickness = 0,
             Color = Library.Theme.Inline,
             Visible = true,
             Filled = true
@@ -768,12 +825,14 @@ do
         local SecondBorderOutline = Utility.AddDrawing("Square", {
             Size = Vector2.new(SecondBorderInline.Size.X - 2, SecondBorderInline.Size.Y - 2),
             Position = Vector2.new(SecondBorderInline.Position.X + 1, SecondBorderInline.Position.Y + 1),
+            Thickness = 0,
             Color = Library.Theme.LightContrast,
             Visible = true,
             Filled = true
         })
         --
         local TabLine = Utility.AddDrawing("Square", {
+            Thickness = 0,
             Color = Library.Theme.Accent[1], --Library.Theme.Outline,
             Visible = true,
             Filled = true,
@@ -781,6 +840,7 @@ do
         })
         --
         local DisableLine = Utility.AddDrawing("Square", {
+            Thickness = 0,
             Color = Library.Theme.LightContrast, --Library.Theme.Outline,
             Visible = true,
             Filled = true,
@@ -838,6 +898,7 @@ do
             local NotificationInline = Utility.AddDrawing("Square", {
                 Size = Vector2.new(0, 21),
                 Position = Vector2.new(0, (Window.Notification * 25) + 100),
+                Thickness = 0,
                 Color = Library.Theme.Inline,
                 Visible = true,
                 Filled = true
@@ -846,6 +907,7 @@ do
             local NotificationOutline = Utility.AddDrawing("Square", {
                 Size = Vector2.new(0, NotificationInline.Size.Y - 1),
                 Position = Vector2.new(NotificationInline.Position.X + 2, NotificationInline.Position.Y + 2),
+                Thickness = 0,
                 Color = Library.Theme.DarkContrast,
                 Visible = true,
                 Filled = true
@@ -854,6 +916,7 @@ do
             local NotificationOutlineBorder = Utility.AddDrawing("Square", {
                 Size = Vector2.new(NotificationOutline.Size.X - 2, NotificationOutline.Size.Y + 5),
                 Position = Vector2.new(NotificationOutline.Position.X + 1, NotificationOutline.Position.Y + 1),
+                Thickness = 0,
                 Color = Library.Theme.Accent[1],
                 Visible = false,
                 Filled = true
@@ -862,6 +925,7 @@ do
             local NotificationTopline = Utility.AddDrawing("Square", {
                 Size = Vector2.new(NotificationOutline.Size.X, 1),
                 Position = Vector2.new(NotificationOutline.Position.X, NotificationOutline.Position.Y),
+                Thickness = 0,
                 Color = Type == "Warning" and Library.Theme.Notification.Warning or Type == "Error" and Library.Theme.Notification.Error or Library.Theme.DarkContrast,
                 Visible = Type == "Warning" or Type == "Error",
                 Filled = true
@@ -870,6 +934,7 @@ do
             local NotificationLeftline = Utility.AddDrawing("Square", {
                 Size = Vector2.new(1, NotificationOutline.Size.Y),
                 Position = Vector2.new(NotificationOutline.Position.X, NotificationOutline.Position.Y),
+                Thickness = 0,
                 Color = Type == "Normal" and Library.Theme.Accent[1] or Library.Theme.DarkContrast,
                 Visible = Type == "Normal",
                 Filled = true
@@ -1004,6 +1069,7 @@ do
             local TabInline = Utility.AddDrawing("Square", {
                 Position = Vector2.new(SecondBorderInline.Position.X, SecondBorderOutline.Position.Y - 20),
                 Size = Vector2.new(0, 20),
+                Thickness = 0,
                 Color = Library.Theme.Inline,
                 Visible = true,
                 Filled = true
@@ -1012,6 +1078,7 @@ do
             local TabOutline = Utility.AddDrawing("Square", {
                 Size = Vector2.new(TabInline.Size.X - 2, TabInline.Size.Y - 2),
                 Position = Vector2.new(TabInline.Position.X + 1, TabInline.Position.Y + 1),
+                Thickness = 0,
                 Color = Library.Theme.DarkContrast, --Library.Theme.Outline,
                 Visible = true,
                 Filled = true
@@ -1094,6 +1161,7 @@ do
                 local SectionInline = Utility.AddDrawing("Square", {
                     Position = Vector2.new(AxisX, (Tab.SectionAxis[Side == "Left" and 1 or 2] == 0 and TabOutline.Position.Y + TabOutline.Size.Y + 6 or 6 + Tab.SectionAxis[Side == "Left" and 1 or 2])),
                     Size = Vector2.new((SecondBorderOutline.Size.X / 2) - 8, 24),
+                    Thickness = 0,
                     Color = Library.Theme.Inline,
                     Visible = true,
                     Filled = true
@@ -1102,6 +1170,7 @@ do
                 local SectionOutline = Utility.AddDrawing("Square", {
                     Size = Vector2.new(SectionInline.Size.X - 2, SectionInline.Size.Y - 2),
                     Position = Vector2.new(SectionInline.Position.X + 1, SectionInline.Position.Y + 1),
+                    Thickness = 0,
                     Color = Library.Theme.DarkContrast, --Library.Theme.Outline,
                     Visible = true,
                     Filled = true
@@ -1110,6 +1179,7 @@ do
                 local SectionTopline = Utility.AddDrawing("Square", {
                     Size = Vector2.new(SectionOutline.Size.X, 1),
                     Position = Vector2.new(SectionOutline.Position.X, SectionOutline.Position.Y),
+                    Thickness = 0,
                     Color = Library.Theme.Accent[1],
                     Visible = true,
                     Filled = true
@@ -1173,6 +1243,7 @@ do
                     local ToggleInline = Utility.AddDrawing("Square", {
                         Position = Vector2.new(SectionInline.Position.X + 8, SectionInline.Position.Y + 23 + Toggle.Axis),
                         Size = Vector2.new(13, 13),
+                        Thickness = 0,
                         Color = Library.Theme.Inline,
                         Visible = true,
                         Filled = true
@@ -1181,6 +1252,7 @@ do
                     local ToggleOutline = Utility.AddDrawing("Square", {
                         Size = Vector2.new(ToggleInline.Size.X - 2, ToggleInline.Size.Y - 2),
                         Position = Vector2.new(ToggleInline.Position.X + 1, ToggleInline.Position.Y + 1),
+                        Thickness = 0,
                         Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                         Visible = true,
                         Filled = true
@@ -1189,6 +1261,7 @@ do
                     local ToggleHitbox = Utility.AddDrawing("Square", {
                         Size = Vector2.new(SectionOutline.Size.X - 60, ToggleInline.Size.Y - 2),
                         Position = Vector2.new(ToggleInline.Position.X + 1, ToggleInline.Position.Y + 1),
+                        Thickness = 0,
                         Color = Library.Theme.Hitbox, --Library.Theme.Outline,
                         Transparency = 0,
                         Visible = true,
@@ -1309,6 +1382,7 @@ do
                         local ColorpickerInline = Utility.AddDrawing("Square", {
                             Position = Vector2.new((SectionInline.Position.X + SectionInline.Size.X) - 38, ToggleInline.Position.Y + 1),
                             Size = Vector2.new(30, 12),
+                            Thickness = 0,
                             Color = Library.Theme.Inline,
                             Visible = true,
                             Filled = true
@@ -1317,6 +1391,7 @@ do
                         local ColorpickerOutline = Utility.AddDrawing("Square", {
                             Size = Vector2.new(ColorpickerInline.Size.X - 2, ColorpickerInline.Size.Y - 2),
                             Position = Vector2.new(ColorpickerInline.Position.X + 1, ColorpickerInline.Position.Y + 1),
+                            Thickness = 0,
                             Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                             Visible = true,
                             Filled = true
@@ -1325,6 +1400,7 @@ do
                         local ColorpickerBase = Utility.AddDrawing("Square", {
                             Size = Vector2.new(ColorpickerInline.Size.X - 2, ColorpickerInline.Size.Y - 2),
                             Position = Vector2.new(ColorpickerInline.Position.X + 1, ColorpickerInline.Position.Y + 1),
+                            Thickness = 0,
                             Color = Colorpicker.Color, --Library.Theme.Outline,
                             Visible = true,
                             Filled = true
@@ -1341,6 +1417,7 @@ do
                         local InternalInline = Utility.AddDrawing("Square", {
                             Position = Vector2.new((ColorpickerInline.Position.X - 225) + ColorpickerInline.Size.X, ToggleInline.Position.Y + 18),
                             Size = Vector2.new(225, 250),
+                            Thickness = 0,
                             Color = Library.Theme.Inline,
                             Visible = true,
                             Filled = true,
@@ -1350,6 +1427,7 @@ do
                         local InternalOutline = Utility.AddDrawing("Square", {
                             Size = Vector2.new(InternalInline.Size.X - 2, InternalInline.Size.Y - 2),
                             Position = Vector2.new(InternalInline.Position.X + 1, InternalInline.Position.Y + 1),
+                            Thickness = 0,
                             Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                             Visible = true,
                             Filled = true,
@@ -1359,6 +1437,7 @@ do
                         local InternalTopline = Utility.AddDrawing("Square", {
                             Size = Vector2.new(InternalOutline.Size.X, 1),
                             Position = Vector2.new(InternalOutline.Position.X, InternalOutline.Position.Y),
+                            Thickness = 0,
                             Color = Library.Theme.Accent[1],
                             Visible = true,
                             Filled = true,
@@ -1386,6 +1465,7 @@ do
                         local InternalBaseInline = Utility.AddDrawing("Square", {
                             Position = Vector2.new(InternalOutline.Position.X + 8, InternalOutline.Position.Y + 25),
                             Size = Vector2.new(192, 192),
+                            Thickness = 0,
                             Color = Library.Theme.Inline,
                             Visible = true,
                             Filled = true,
@@ -1395,6 +1475,7 @@ do
                         local InternalBase = Utility.AddDrawing("Square", {
                             Size = Vector2.new(192 - 4, 192 - 4),
                             Position = Vector2.new(InternalBaseInline.Position.X + 2, InternalBaseInline.Position.Y + 2),
+                            Thickness = 0,
                             Color = Options.Color, --Library.Theme.Outline,
                             Visible = true,
                             Filled = true,
@@ -1413,6 +1494,7 @@ do
                         local InternalHueInline = Utility.AddDrawing("Square", {
                             Position = Vector2.new(InternalOutline.Position.X + InternalBase.Size.X + 14, InternalOutline.Position.Y + 26),
                             Size = Vector2.new(16, 196),
+                            Thickness = 0,
                             Color = Library.Theme.Inline,
                             Visible = true,
                             Filled = true,
@@ -1431,6 +1513,7 @@ do
                         local InternalOutlineHuePicker = Utility.AddDrawing("Square", {
                             Position = Vector2.new(InternalOutline.Position.X + InternalBase.Size.X + 12, InternalOutline.Position.Y + 26),
                             Size = Vector2.new(InternalHueInline.Size.X + 2, 6),
+                            Thickness = 2,
                             Color = Library.Theme.Outline,
                             Visible = true,
                             Filled = false,
@@ -1440,15 +1523,25 @@ do
                         local InternalHuePicker = Utility.AddDrawing("Square", {
                             Position = Vector2.new(InternalOutlineHuePicker.Position.X + 1, InternalOutlineHuePicker.Position.Y + 1),
                             Size = Vector2.new(InternalOutlineHuePicker.Size.X - 2, InternalOutlineHuePicker.Size.Y - 2),
+                            Thickness = 2,
                             Color = Library.Theme.Text,
                             Visible = true,
                             Filled = false,
                             ZIndex = 3
                         })
                         --
+                        local Cursor = Utility.AddDrawing("Image", {
+                            Size = Vector2.new(6, 6),
+                            Data = Library.Theme.SaturationCursor,
+                            Transparency = 1,
+                            Visible = true,
+                            ZIndex = 6
+                        })
+                        --
                         local InternalInlineHex = Utility.AddDrawing("Square", {
                             Size = Vector2.new(80 - 2, 18 - 2),
                             Position = Vector2.new(InternalOutline.Position.X + 8 + 1, InternalOutline.Position.Y + InternalSaturation.Size.Y + 30 + 1),
+                            Thickness = 0,
                             Color = Library.Theme.Inline,
                             Visible = true,
                             Filled = true,
@@ -1458,6 +1551,7 @@ do
                         local InternalOutlineHex = Utility.AddDrawing("Square", {
                             Size = Vector2.new(InternalInlineHex.Size.X - 2, InternalInlineHex.Size.Y - 2),
                             Position = Vector2.new(InternalInlineHex.Position.X + 1, InternalInlineHex.Position.Y + 1),
+                            Thickness = 0,
                             Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                             Visible = true,
                             Filled = true,
@@ -1479,6 +1573,7 @@ do
                         local InternalInlineRGB = Utility.AddDrawing("Square", {
                             Size = Vector2.new(130 - 2, 18 - 2),
                             Position = Vector2.new(InternalOutline.Position.X + 90 + 1, InternalOutline.Position.Y + InternalSaturation.Size.Y + 30 + 1),
+                            Thickness = 0,
                             Color = Library.Theme.Inline,
                             Visible = true,
                             Filled = true,
@@ -1488,6 +1583,7 @@ do
                         local InternalOutlineRGB = Utility.AddDrawing("Square", {
                             Size = Vector2.new(InternalInlineRGB.Size.X - 2, InternalInlineRGB.Size.Y - 2),
                             Position = Vector2.new(InternalInlineRGB.Position.X + 1, InternalInlineRGB.Position.Y + 1),
+                            Thickness = 0,
                             Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                             Visible = true,
                             Filled = true,
@@ -1509,6 +1605,7 @@ do
                         local InternalInlineRainbow = Utility.AddDrawing("Square", {
                             Size = Vector2.new(100 - 2, 18 - 2),
                             Position = Vector2.new((InternalOutline.Position.X + InternalOutline.Size.X) - 100 - 2 + 1, InternalOutline.Position.Y + 4 + 1),
+                            Thickness = 0,
                             Color = Library.Theme.Inline,
                             Visible = true,
                             Filled = true,
@@ -1518,6 +1615,7 @@ do
                         local InternalOutlineRainbow = Utility.AddDrawing("Square", {
                             Size = Vector2.new(InternalInlineRainbow.Size.X - 2, InternalInlineRainbow.Size.Y - 2),
                             Position = Vector2.new(InternalInlineRainbow.Position.X + 1, InternalInlineRainbow.Position.Y + 1),
+                            Thickness = 0,
                             Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                             Visible = true,
                             Filled = true,
@@ -1555,6 +1653,7 @@ do
                             InternalOutlineRainbow.Visible = State
                             InternalRainbow.Visible = State
                             InternalTopline.Visible = State
+                            Cursor.Visible = State
                             InternalOutlineHuePicker.Visible = State
                             InternalHuePicker.Visible = State
                             Tab.Dropdowns[Side][ToggleTitle.Text] = State
@@ -1811,6 +1910,7 @@ do
                         local KeybindInline = Utility.AddDrawing("Square", {
                             Position = Vector2.new(SectionInline.Position.X + SectionInline.Size.X - 40 - 6, SectionInline.Position.Y + Keybind.Axis + 2),
                             Size = Vector2.new(40, 14),
+                            Thickness = 0,
                             Color = Library.Theme.Inline,
                             Visible = true,
                             Filled = true
@@ -1819,7 +1919,7 @@ do
                         local KeybindOutline = Utility.AddDrawing("Square", {
                             Size = Vector2.new(KeybindInline.Size.X - 2, KeybindInline.Size.Y - 2),
                             Position = Vector2.new(KeybindInline.Position.X + 1, KeybindInline.Position.Y + 1),
-                             
+                            Thickness = 0,
                             Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                             Visible = true,
                             Filled = true
@@ -1848,7 +1948,7 @@ do
                         local KeybindHoldInline = Utility.AddDrawing("Square", {
                             Position = Vector2.new(SectionInline.Position.X + SectionInline.Size.X + 2 - 6, SectionInline.Position.Y + Keybind.Axis + 2),
                             Size = Vector2.new(60, 16),
-                             
+                            Thickness = 0,
                             Color = Library.Theme.Inline,
                             Visible = true,
                             Filled = true,
@@ -1858,7 +1958,7 @@ do
                         local KeybindHoldOutline = Utility.AddDrawing("Square", {
                             Size = Vector2.new(KeybindHoldInline.Size.X - 2, KeybindHoldInline.Size.Y - 2),
                             Position = Vector2.new(KeybindHoldInline.Position.X + 1, KeybindHoldInline.Position.Y + 1),
-                             
+                            Thickness = 0,
                             Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                             Visible = true,
                             Filled = true,
@@ -1889,7 +1989,7 @@ do
                         local KeybindToggleInline = Utility.AddDrawing("Square", {
                             Position = Vector2.new(SectionInline.Position.X + SectionInline.Size.X + 2 - 6, SectionInline.Position.Y + Keybind.Axis + 18),
                             Size = Vector2.new(60, 16),
-                             
+                            Thickness = 0,
                             Color = Library.Theme.Inline,
                             Visible = true,
                             Filled = true
@@ -1898,7 +1998,7 @@ do
                         local KeybindToggleOutline = Utility.AddDrawing("Square", {
                             Size = Vector2.new(KeybindToggleInline.Size.X - 2, KeybindToggleInline.Size.Y - 2),
                             Position = Vector2.new(KeybindToggleInline.Position.X + 1, KeybindToggleInline.Position.Y + 1),
-                             
+                            Thickness = 0,
                             Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                             Visible = true,
                             Filled = true,
@@ -1929,7 +2029,7 @@ do
                         local KeybindAlwaysInline = Utility.AddDrawing("Square", {
                             Position = Vector2.new(SectionInline.Position.X + SectionInline.Size.X + 2 - 6, SectionInline.Position.Y + Keybind.Axis + 34),
                             Size = Vector2.new(60, 16),
-                             
+                            Thickness = 0,
                             Color = Library.Theme.Inline,
                             Visible = true,
                             Filled = true,
@@ -1939,7 +2039,7 @@ do
                         local KeybindAlwaysOutline = Utility.AddDrawing("Square", {
                             Size = Vector2.new(KeybindAlwaysInline.Size.X - 2, KeybindAlwaysInline.Size.Y - 2),
                             Position = Vector2.new(KeybindAlwaysInline.Position.X + 1, KeybindAlwaysInline.Position.Y + 1),
-                             
+                            Thickness = 0,
                             Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                             Visible = true,
                             Filled = true,
@@ -2177,7 +2277,7 @@ do
                     local SliderInline = Utility.AddDrawing("Square", {
                         Position = Vector2.new(SectionInline.Position.X + 8, SectionInline.Position.Y + 23 + Slider.Axis + 15),
                         Size = Vector2.new(SectionOutline.Size.X - 12, 13),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.Inline,
                         Visible = true,
                         Filled = true
@@ -2186,7 +2286,7 @@ do
                     local SliderOutline = Utility.AddDrawing("Square", {
                         Size = Vector2.new(SliderInline.Size.X - 2, SliderInline.Size.Y - 2),
                         Position = Vector2.new(SliderInline.Position.X + 1, SliderInline.Position.Y + 1),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                         Visible = true,
                         Filled = true
@@ -2195,7 +2295,7 @@ do
                     local SliderBar = Utility.AddDrawing("Square", {
                         Size = Vector2.new(SliderOutline.Size.X / 2, SliderOutline.Size.Y),
                         Position = Vector2.new(SliderOutline.Position.X, SliderOutline.Position.Y),
-                         
+                        Thickness = 0,
                         Transparency = 0.75,
                         Color = Library.Theme.Accent[1], --Library.Theme.Outline,
                         Visible = true,
@@ -2372,7 +2472,7 @@ do
                     local ButtonInline = Utility.AddDrawing("Square", {
                         Position = Vector2.new(SectionInline.Position.X + 8, SectionInline.Position.Y + 24 + Button.Axis),
                         Size = Vector2.new(SectionOutline.Size.X - 12, 18),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.Inline,
                         Visible = true,
                         Filled = true
@@ -2381,7 +2481,7 @@ do
                     local ButtonOutline = Utility.AddDrawing("Square", {
                         Size = Vector2.new(ButtonInline.Size.X - 2, ButtonInline.Size.Y - 2),
                         Position = Vector2.new(ButtonInline.Position.X + 1, ButtonInline.Position.Y + 1),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                         Visible = true,
                         Filled = true
@@ -2482,7 +2582,7 @@ do
                     local TextBoxInline = Utility.AddDrawing("Square", {
                         Position = Vector2.new(SectionInline.Position.X + 8, SectionInline.Position.Y + 34 + TextBox.Axis),
                         Size = Vector2.new(SectionOutline.Size.X - 12, 18),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.Inline,
                         Visible = true,
                         Filled = true
@@ -2491,7 +2591,7 @@ do
                     local TextBoxOutline = Utility.AddDrawing("Square", {
                         Size = Vector2.new(TextBoxInline.Size.X - 2, TextBoxInline.Size.Y - 2),
                         Position = Vector2.new(TextBoxInline.Position.X + 1, TextBoxInline.Position.Y + 1),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                         Visible = true,
                         Filled = true
@@ -2527,7 +2627,7 @@ do
                     --
                     local InputHandler = Instance.new("TextBox", ScreenGui)
                     InputHandler.Position = UDim2.new(-100, 0, -100, 0)
-                    InputHandler.Name = ("akiri-INPUT-%s"):format(HttpService:GenerateGUID(false))
+                    InputHandler.Name = ("poems-INPUT-%s"):format(HttpService:GenerateGUID(false))
                     --
                     Utility.AddConnection(UserInput.InputBegan, function(Input, GameProcessed)
                         if Input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -2673,7 +2773,7 @@ do
                     local ColorpickerInline = Utility.AddDrawing("Square", {
                         Position = Vector2.new((SectionInline.Position.X + SectionInline.Size.X) - 38, SectionInline.Position.Y + 23 + Colorpicker.Axis),
                         Size = Vector2.new(30, 12),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.Inline,
                         Visible = true,
                         Filled = true
@@ -2682,7 +2782,7 @@ do
                     local ColorpickerOutline = Utility.AddDrawing("Square", {
                         Size = Vector2.new(ColorpickerInline.Size.X - 2, ColorpickerInline.Size.Y - 2),
                         Position = Vector2.new(ColorpickerInline.Position.X + 1, ColorpickerInline.Position.Y + 1),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                         Visible = true,
                         Filled = true
@@ -2691,7 +2791,7 @@ do
                     local ColorpickerBase = Utility.AddDrawing("Square", {
                         Size = Vector2.new(ColorpickerInline.Size.X - 2, ColorpickerInline.Size.Y - 2),
                         Position = Vector2.new(ColorpickerInline.Position.X + 1, ColorpickerInline.Position.Y + 1),
-                         
+                        Thickness = 0,
                         Color = Colorpicker.Color, --Library.Theme.Outline,
                         Visible = true,
                         Filled = true
@@ -2708,7 +2808,7 @@ do
                     local InternalInline = Utility.AddDrawing("Square", {
                         Position = Vector2.new((ColorpickerInline.Position.X - 225) + ColorpickerInline.Size.X, ColorpickerInline.Position.Y + 18),
                         Size = Vector2.new(225, 250),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.Inline,
                         Visible = true,
                         Filled = true,
@@ -2718,7 +2818,7 @@ do
                     local InternalOutline = Utility.AddDrawing("Square", {
                         Size = Vector2.new(InternalInline.Size.X - 2, InternalInline.Size.Y - 2),
                         Position = Vector2.new(InternalInline.Position.X + 1, InternalInline.Position.Y + 1),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                         Visible = true,
                         Filled = true,
@@ -2728,7 +2828,7 @@ do
                     local InternalTopline = Utility.AddDrawing("Square", {
                         Size = Vector2.new(InternalOutline.Size.X, 1),
                         Position = Vector2.new(InternalOutline.Position.X, InternalOutline.Position.Y),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.Accent[1],
                         Visible = true,
                         Filled = true,
@@ -2756,7 +2856,7 @@ do
                     local InternalBaseInline = Utility.AddDrawing("Square", {
                         Position = Vector2.new(InternalOutline.Position.X + 8, InternalOutline.Position.Y + 25),
                         Size = Vector2.new(192, 192),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.Inline,
                         Visible = true,
                         Filled = true,
@@ -2766,7 +2866,7 @@ do
                     local InternalBase = Utility.AddDrawing("Square", {
                         Size = Vector2.new(192 - 4, 192 - 4),
                         Position = Vector2.new(InternalBaseInline.Position.X + 2, InternalBaseInline.Position.Y + 2),
-                         
+                        Thickness = 0,
                         Color = Options.Color, --Library.Theme.Outline,
                         Visible = true,
                         Filled = true,
@@ -2785,7 +2885,7 @@ do
                     local InternalHueInline = Utility.AddDrawing("Square", {
                         Position = Vector2.new(InternalOutline.Position.X + InternalBase.Size.X + 14, InternalOutline.Position.Y + 26),
                         Size = Vector2.new(16, 196),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.Inline,
                         Visible = true,
                         Filled = true,
@@ -2804,7 +2904,7 @@ do
                     local InternalOutlineHuePicker = Utility.AddDrawing("Square", {
                         Position = Vector2.new(InternalOutline.Position.X + InternalBase.Size.X + 12, InternalOutline.Position.Y + 26),
                         Size = Vector2.new(InternalHueInline.Size.X + 2, 6),
-                         
+                        Thickness = 2,
                         Color = Library.Theme.Outline,
                         Visible = true,
                         Filled = false,
@@ -2814,17 +2914,27 @@ do
                     local InternalHuePicker = Utility.AddDrawing("Square", {
                         Position = Vector2.new(InternalOutlineHuePicker.Position.X + 1, InternalOutlineHuePicker.Position.Y + 1),
                         Size = Vector2.new(InternalOutlineHuePicker.Size.X - 2, InternalOutlineHuePicker.Size.Y - 2),
-                         
+                        Thickness = 2,
                         Color = Library.Theme.Text,
                         Visible = true,
                         Filled = false,
                         ZIndex = 3
                     })
                     --
+                    
+                    --
+                    local Cursor = Utility.AddDrawing("Image", {
+                        Size = Vector2.new(6, 6),
+                        Data = Library.Theme.SaturationCursor,
+                        Transparency = 1,
+                        Visible = true,
+                        ZIndex = 6
+                    })
+                    --
                     local InternalInlineHex = Utility.AddDrawing("Square", {
                         Size = Vector2.new(80 - 2, 18 - 2),
                         Position = Vector2.new(InternalOutline.Position.X + 8 + 1, InternalOutline.Position.Y + InternalSaturation.Size.Y + 30 + 1),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.Inline,
                         Visible = true,
                         Filled = true,
@@ -2834,7 +2944,7 @@ do
                     local InternalOutlineHex = Utility.AddDrawing("Square", {
                         Size = Vector2.new(InternalInlineHex.Size.X - 2, InternalInlineHex.Size.Y - 2),
                         Position = Vector2.new(InternalInlineHex.Position.X + 1, InternalInlineHex.Position.Y + 1),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                         Visible = true,
                         Filled = true,
@@ -2856,7 +2966,7 @@ do
                     local InternalInlineRGB = Utility.AddDrawing("Square", {
                         Size = Vector2.new(130 - 2, 18 - 2),
                         Position = Vector2.new(InternalOutline.Position.X + 90 + 1, InternalOutline.Position.Y + InternalSaturation.Size.Y + 30 + 1),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.Inline,
                         Visible = true,
                         Filled = true,
@@ -2866,7 +2976,7 @@ do
                     local InternalOutlineRGB = Utility.AddDrawing("Square", {
                         Size = Vector2.new(InternalInlineRGB.Size.X - 2, InternalInlineRGB.Size.Y - 2),
                         Position = Vector2.new(InternalInlineRGB.Position.X + 1, InternalInlineRGB.Position.Y + 1),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                         Visible = true,
                         Filled = true,
@@ -2890,7 +3000,7 @@ do
                     local InternalInlineRainbow = Utility.AddDrawing("Square", {
                         Size = Vector2.new(100 - 2, 18 - 2),
                         Position = Vector2.new((InternalOutline.Position.X + InternalOutline.Size.X) - 100 - 2 + 1, InternalOutline.Position.Y + 4 + 1),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.Inline,
                         Visible = true,
                         Filled = true,
@@ -2900,7 +3010,7 @@ do
                     local InternalOutlineRainbow = Utility.AddDrawing("Square", {
                         Size = Vector2.new(InternalInlineRainbow.Size.X - 2, InternalInlineRainbow.Size.Y - 2),
                         Position = Vector2.new(InternalInlineRainbow.Position.X + 1, InternalInlineRainbow.Position.Y + 1),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                         Visible = true,
                         Filled = true,
@@ -2938,6 +3048,7 @@ do
                         InternalOutlineRainbow.Visible = State
                         InternalRainbow.Visible = State
                         InternalTopline.Visible = State
+                        Cursor.Visible = State
                         InternalOutlineHuePicker.Visible = State
                         InternalHuePicker.Visible = State
                         Tab.Dropdowns[Side][ColorpickerTitle.Text] = State
@@ -3167,7 +3278,7 @@ do
                     local DropdownInline = Utility.AddDrawing("Square", {
                         Position = Vector2.new(SectionInline.Position.X + 8, SectionInline.Position.Y + 23 + Dropdown.Axis + 16),
                         Size = Vector2.new(SectionOutline.Size.X - 12, Dropdown.BaseSize),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.Inline,
                         Visible = true,
                         Filled = true
@@ -3176,7 +3287,7 @@ do
                     local DropdownOutline = Utility.AddDrawing("Square", {
                         Size = Vector2.new(DropdownInline.Size.X - 2, DropdownInline.Size.Y - 2),
                         Position = Vector2.new(DropdownInline.Position.X + 1, DropdownInline.Position.Y + 1),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                         Visible = true,
                         Filled = true
@@ -3227,7 +3338,7 @@ do
                     })
                     --
                     local DropdownDetect = Utility.AddDrawing("Square", {
-                         
+                        Thickness = 0,
                         Transparency = 0,
                         Color = Library.Theme.Hitbox, --Library.Theme.Outline,
                         Visible = true,
@@ -3275,7 +3386,7 @@ do
                         local SelectionInline = Utility.AddDrawing("Square", {
                             Position = Vector2.new(DropdownInline.Position.X, (DropdownInline.Position.Y + (Index * (18)))),
                             Size = Vector2.new(SectionOutline.Size.X - 12, 18),
-                             
+                            Thickness = 0,
                             Color = Library.Theme.Inline,
                             Visible = true,
                             Filled = true,
@@ -3285,7 +3396,7 @@ do
                         local SelectionOutline = Utility.AddDrawing("Square", {
                             Size = Vector2.new(SelectionInline.Size.X - 2, SelectionInline.Size.Y - 2),
                             Position = Vector2.new(SelectionInline.Position.X + 1, SelectionInline.Position.Y + 1),
-                             
+                            Thickness = 0,
                             Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                             Visible = true,
                             Filled = true,
@@ -3481,7 +3592,7 @@ do
                     local KeybindInline = Utility.AddDrawing("Square", {
                         Position = Vector2.new(SectionInline.Position.X + SectionInline.Size.X - 40 - 6, SectionInline.Position.Y + 23 + Keybind.Axis + 2),
                         Size = Vector2.new(40, 14),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.Inline,
                         Visible = true,
                         Filled = true
@@ -3490,7 +3601,7 @@ do
                     local KeybindOutline = Utility.AddDrawing("Square", {
                         Size = Vector2.new(KeybindInline.Size.X - 2, KeybindInline.Size.Y - 2),
                         Position = Vector2.new(KeybindInline.Position.X + 1, KeybindInline.Position.Y + 1),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                         Visible = true,
                         Filled = true
@@ -3519,7 +3630,7 @@ do
                     local KeybindHoldInline = Utility.AddDrawing("Square", {
                         Position = Vector2.new(SectionInline.Position.X + SectionInline.Size.X + 2 - 6, SectionInline.Position.Y + 23 + Keybind.Axis + 2),
                         Size = Vector2.new(60, 16),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.Inline,
                         Visible = true,
                         Filled = true
@@ -3528,7 +3639,7 @@ do
                     local KeybindHoldOutline = Utility.AddDrawing("Square", {
                         Size = Vector2.new(KeybindHoldInline.Size.X - 2, KeybindHoldInline.Size.Y - 2),
                         Position = Vector2.new(KeybindHoldInline.Position.X + 1, KeybindHoldInline.Position.Y + 1),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                         Visible = true,
                         Filled = true
@@ -3557,7 +3668,7 @@ do
                     local KeybindToggleInline = Utility.AddDrawing("Square", {
                         Position = Vector2.new(SectionInline.Position.X + SectionInline.Size.X + 2 - 6, SectionInline.Position.Y + 23 + Keybind.Axis + 2 + 18),
                         Size = Vector2.new(60, 16),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.Inline,
                         Visible = true,
                         Filled = true
@@ -3566,7 +3677,7 @@ do
                     local KeybindToggleOutline = Utility.AddDrawing("Square", {
                         Size = Vector2.new(KeybindToggleInline.Size.X - 2, KeybindToggleInline.Size.Y - 2),
                         Position = Vector2.new(KeybindToggleInline.Position.X + 1, KeybindToggleInline.Position.Y + 1),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                         Visible = true,
                         Filled = true
@@ -3595,7 +3706,7 @@ do
                     local KeybindAlwaysInline = Utility.AddDrawing("Square", {
                         Position = Vector2.new(SectionInline.Position.X + SectionInline.Size.X + 2 - 6, SectionInline.Position.Y + 23 + Keybind.Axis + 2 + 34),
                         Size = Vector2.new(60, 16),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.Inline,
                         Visible = true,
                         Filled = true
@@ -3604,7 +3715,7 @@ do
                     local KeybindAlwaysOutline = Utility.AddDrawing("Square", {
                         Size = Vector2.new(KeybindAlwaysInline.Size.X - 2, KeybindAlwaysInline.Size.Y - 2),
                         Position = Vector2.new(KeybindAlwaysInline.Position.X + 1, KeybindAlwaysInline.Position.Y + 1),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.LightContrast, --Library.Theme.Outline,
                         Visible = true,
                         Filled = true
@@ -3805,7 +3916,7 @@ do
                 local PlayerListTabInline = Utility.AddDrawing("Square", {
                     Size = Vector2.new(SecondBorderOutline.Size.X - 16, 40),
                     Position = Vector2.new(SecondBorderOutline.Position.X + 8, SecondBorderOutline.Position.Y + 6),
-                     
+                    Thickness = 0,
                     Color = Library.Theme.Inline,
                     Visible = true,
                     Filled = true
@@ -3814,7 +3925,7 @@ do
                 local PlayerListTabOutline = Utility.AddDrawing("Square", {
                     Size = Vector2.new(PlayerListTabInline.Size.X - 2, PlayerListTabInline.Size.Y - 2),
                     Position = Vector2.new(PlayerListTabInline.Position.X + 1, PlayerListTabInline.Position.Y + 1),
-                     
+                    Thickness = 0,
                     Color = Library.Theme.Outline,
                     Visible = true,
                     Filled = true
@@ -3823,7 +3934,7 @@ do
                 local PlayerListPage = Utility.AddDrawing("Square", {
                     Size = Vector2.new(PlayerListTabOutline.Size.X - 4, PlayerListTabOutline.Size.Y - 4),
                     Position = Vector2.new(PlayerListTabOutline.Position.X + 2, PlayerListTabOutline.Position.Y + 2),
-                     
+                    Thickness = 0,
                     Color = Library.Theme.DarkContrast,
                     Visible = true,
                     Filled = true
@@ -3832,7 +3943,7 @@ do
                 local PlayerListTopline = Utility.AddDrawing("Square", {
                     Size = Vector2.new(PlayerListTabOutline.Size.X, 1),
                     Position = Vector2.new(PlayerListTabOutline.Position.X, PlayerListTabOutline.Position.Y),
-                     
+                    Thickness = 0,
                     Color = Library.Theme.Accent[1],
                     Visible = true,
                     Filled = true
@@ -3895,7 +4006,7 @@ do
                     local PlayerTabInline = Utility.AddDrawing("Square", {
                         Size = Vector2.new(PlayerListTabInline.Size.X - 2, 22),
                         Position = Vector2.new(PlayerListTabInline.Position.X + 1, (PlayerListTabInline.Position.Y + 15) + (PlayerList.PlayersInList * 22)),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.Inline,
                         Visible = Window.SelectedTab == "Settings",
                         Filled = true
@@ -3904,7 +4015,7 @@ do
                     local PlayerTabOutline = Utility.AddDrawing("Square", {
                         Size = Vector2.new(PlayerTabInline.Size.X - 2, PlayerTabInline.Size.Y - 2),
                         Position = Vector2.new(PlayerTabInline.Position.X + 1, PlayerTabInline.Position.Y + 1),
-                         
+                        Thickness = 0,
                         Color = Library.Theme.Outline,
                         Visible = Window.SelectedTab == "Settings",
                         Filled = true
@@ -3999,7 +4110,7 @@ do
             
                 local ESPPreviewOutline = Utility.AddDrawing("Square", {
                     Size = Vector2.new(250, 335),
-                       
+                    Thickness = 0,  
                     Color = Library.Theme.Outline,
                     Visible = false
                     ,
@@ -4011,7 +4122,7 @@ do
                 local ESPPreviewBorder = Utility.AddDrawing("Square", {
                     Size = Vector2.new(ESPPreviewOutline.Size.X - 2, ESPPreviewOutline.Size.Y - 2),
                     Position = Vector2.new(ESPPreviewOutline.Position.X + 1, ESPPreviewOutline.Position.Y + 1),
-                     
+                    Thickness = 0,
                     Color = Library.Theme.Accent[1],
                     Visible = false,
                     Filled = true
@@ -4020,7 +4131,7 @@ do
                 local ESPPreviewFrame = Utility.AddDrawing("Square", {
                     Size = Vector2.new(ESPPreviewBorder.Size.X - 2, ESPPreviewBorder.Size.Y - 2),
                     Position = Vector2.new(ESPPreviewBorder.Position.X + 1, ESPPreviewBorder.Position.Y + 1),
-                     
+                    Thickness = 0,
                     Transparency = 1,
                     Color = Library.Theme.DarkContrast,
                     Visible = false,
@@ -4041,7 +4152,7 @@ do
                 local ESPPreviewOutline = Utility.AddDrawing("Square", {
                     Size = Vector2.new(230, 300),
                     Position = Vector2.new(ESPPreviewBorder.Position.X + 10, ESPPreviewBorder.Position.Y + 25),
-                     
+                    Thickness = 0,
                     Transparency = 1,
                     Color = Library.Theme.Outline,
                     Visible = false,
@@ -4051,7 +4162,7 @@ do
                 local ESPPreviewInnerBoxBorder = Utility.AddDrawing("Square", {
                     Size = Vector2.new(ESPPreviewOutline.Size.X - 2, ESPPreviewOutline.Size.Y - 2),
                     Position = Vector2.new(ESPPreviewOutline.Position.X + 1, ESPPreviewOutline.Position.Y + 1),
-                     
+                    Thickness = 0,
                     Color = Library.Theme.Inline,
                     Visible = false,
                     Filled = true
@@ -4060,7 +4171,7 @@ do
                 local ESPPreviewInnerBox = Utility.AddDrawing("Square", {
                     Size = Vector2.new(ESPPreviewInnerBoxBorder.Size.X - 2, ESPPreviewInnerBoxBorder.Size.Y - 2),
                     Position = Vector2.new(ESPPreviewInnerBoxBorder.Position.X + 1, ESPPreviewInnerBoxBorder.Position.Y + 1),
-                     
+                    Thickness = 0,
                     Transparency = 1,
                     Color = Library.Theme.LightContrast,
                     Visible = false,
@@ -4078,7 +4189,7 @@ do
                 local ESPBoxOutline = Utility.AddDrawing("Square", {
                     Size = Vector2.new(200, 236),
                     Position = Vector2.new(Dummy.Position.X + 5, Dummy.Position.Y + 14),
-                     
+                    Thickness = 3,
                     Transparency = 1,
                     Color = Library.Theme.Outline,
                     Visible = false,
@@ -4088,7 +4199,7 @@ do
                 local ESPBox = Utility.AddDrawing("Square", {
                     Size = Vector2.new(200, 236),
                     Position = Vector2.new(Dummy.Position.X + 5, Dummy.Position.Y + 14),
-                     
+                    Thickness = 1,
                     Transparency = 1,
                     Color = Library.Theme.Accent[1],
                     Visible = false,
@@ -4098,7 +4209,7 @@ do
                 local ESPHealthBarOutline = Utility.AddDrawing("Square", {
                     Size = Vector2.new(2, 236),
                     Position = Vector2.new(ESPBox.Position.X - 6, ESPBox.Position.Y),
-                     
+                    Thickness = 1,
                     Transparency = 1,
                     Color = Color3.fromRGB(0, 0, 0),
                     Visible = false,
@@ -4108,7 +4219,7 @@ do
                 local ESPHealthBar = Utility.AddDrawing("Square", {
                     Size = Vector2.new(2, 236),
                     Position = Vector2.new(ESPBox.Position.X - 6, ESPBox.Position.Y),
-                     
+                    Thickness = 1,
                     Transparency = 1,
                     Color = Color3.fromRGB(0, 255, 0),
                     Visible = false,
@@ -4392,7 +4503,7 @@ do
             local WindowOutline = Utility.AddDrawing("Square", {
                 Size = Vector2.new(475, 24),
                 Position = Vector2.new(150, 8),
-                 
+                Thickness = 0,
                 Color = Library.Theme.Outline,
                 Visible = true,
                 Filled = true
@@ -4410,7 +4521,7 @@ do
             local WindowOutlineBorder = Utility.AddDrawing("Square", {
                 Size = Vector2.new(WindowOutline.Size.X - 2, WindowOutline.Size.Y - 2),
                 Position = Vector2.new(WindowOutline.Position.X + 1, WindowOutline.Position.Y + 1),
-                 
+                Thickness = 0,
                 Color = Library.Theme.Accent[1],
                 Visible = false,
                 Filled = true
@@ -4419,7 +4530,7 @@ do
             local WindowFrame = Utility.AddDrawing("Square", {
                 Size = Vector2.new(WindowOutlineBorder.Size.X - 2, WindowOutlineBorder.Size.Y - 2),
                 Position = Vector2.new(WindowOutlineBorder.Position.X + 1, WindowOutlineBorder.Position.Y + 1),
-                 
+                Thickness = 0,
                 Transparency = 1,
                 Color = Library.Theme.DarkContrast,
                 Visible = true,
@@ -4429,7 +4540,7 @@ do
             local WindowTopline = Utility.AddDrawing("Square", {
                 Size = Vector2.new(WindowOutlineBorder.Size.X, 1),
                 Position = Vector2.new(WindowOutlineBorder.Position.X, WindowOutlineBorder.Position.Y),
-                 
+                Thickness = 0,
                 Color = Library.Theme.Accent[1],
                 Visible = true,
                 Filled = true
@@ -4454,7 +4565,7 @@ do
                 Font = Library.Theme.Font,
                 Size = Library.Theme.TextSize,
                 Color = Library.Theme.Text,
-                Text = "poems",
+                Text = Watermark.Title .. " | " .. ("%s, %s, %s"):format(os.date("%B"), os.date("%d"), os.date("%Y")),
                 Position = Vector2.new(WindowFrame.Position.X + (WindowFrame.Size.X / 2), WindowOutlineBorder.Position.Y + 4),
                 Visible = true,
                 Center = false,
